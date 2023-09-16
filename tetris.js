@@ -75,17 +75,19 @@ var Piece = function (form) {
     this.chkLines = function () {
         let unique = [...new Set(this.y)];
         unique.sort()
-        //unique.reverse()
         for (let i = 0; i < unique.length; i++) {
             line = true;
-            for (let e = 0; e < w; e++) {
-                if (board[unique[i] + this.off_y][e] != 2) {
+            l = unique[i] + this.off_y
+            for (let e = 0; e < board[0].length; e++) {
+                if (board[l][e] != 2) {
                     line = false;
                 }
             }
             if (line) {
-                document.getElementById("screen").removeChild(document.getElementById("screen").childNodes[i + this.off_y])
-                board.splice(i + this.off_y, 1)
+                console.log(board)
+                console.log("deleted line: " + l)
+                document.getElementById("screen").removeChild(document.getElementById("screen").childNodes[l])
+                board.splice(l, 1)
                 board.unshift(new Array(w).fill(0))
                 newRow()
                 score += 100;
@@ -154,7 +156,7 @@ var Piece = function (form) {
     }
     this.canMove = function (ny, nx) {
         for (let i = 0; i < 4; i++) {
-            if (this.x[i] + this.off_x + nx < 0 || this.y[i] + this.off_y + ny < 0 || this.x[i] + this.off_x + nx >= 10 || this.y[i] + this.off_y + ny >= 20 || board[this.y[i] + this.off_y + ny][this.x[i] + this.off_x + nx] != 0) {
+            if (this.x[i] + this.off_x + nx < 0 || this.y[i] + this.off_y + ny < 0 || this.x[i] + this.off_x + nx >= board[0].length || this.y[i] + this.off_y + ny >= board.length || board[this.y[i] + this.off_y + ny][this.x[i] + this.off_x + nx] != 0) {
                 return false;
             }
         }
