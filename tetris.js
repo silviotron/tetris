@@ -83,7 +83,6 @@ var Piece = function (form) {
                     line = false;
                 }
             }
-            console.log((unique[i] + this.off_y) + " -> " + line)
             if (line) {
                 document.getElementById("screen").removeChild(document.getElementById("screen").childNodes[i + this.off_y])
                 board.splice(i + this.off_y, 1)
@@ -112,7 +111,6 @@ var Piece = function (form) {
         }
     }
     this.move = function (ny, nx) {
-
         res = false;
         this.unShow()
         if (this.canMove(ny, nx)) {
@@ -141,12 +139,16 @@ var Piece = function (form) {
         for (let i = 0; i < 4; i++) {
             rotatedX[i] = Math.round(c * (this.x[i] - this.axis[1]) - s * (this.y[i] - this.axis[0]) + this.axis[1]);
             rotatedY[i] = Math.round(s * (this.x[i] - this.axis[1]) + c * (this.y[i] - this.axis[0]) + this.axis[0]);
-            //console.log(i + ": ( " + rotatedX[i] + " , " + rotatedY[i] + " ) -> ( " + this.x[i] + " , " + this.y[i] + " )")
+
+            if (board[rotatedY[i] + this.off_y][rotatedX[i] + this.off_x] != 0 && board[rotatedY[i] + this.off_y][rotatedX[i] + this.off_x] != 1) {
+                return false
+            }
         }
         this.unShow()
         this.y = rotatedY
         this.x = rotatedX
         this.show()
+        return true
 
 
     }
