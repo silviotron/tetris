@@ -75,6 +75,7 @@ var Piece = function (form) {
     this.chkLines = function () {
         let unique = [...new Set(this.y)];
         unique.sort()
+        //unique.reverse()
         for (let i = 0; i < unique.length; i++) {
             line = true;
             for (let e = 0; e < w; e++) {
@@ -82,9 +83,12 @@ var Piece = function (form) {
                     line = false;
                 }
             }
-            console.log(line)
+            console.log((unique[i] + this.off_y) + " -> " + line)
             if (line) {
                 document.getElementById("screen").removeChild(document.getElementById("screen").childNodes[i + this.off_y])
+                board.splice(i + this.off_y, 1)
+                board.unshift(new Array(w).fill(0))
+                newRow()
                 score += 100;
                 document.getElementById("score").innerHTML = score
 
@@ -95,14 +99,14 @@ var Piece = function (form) {
     }
     this.show = function () {
         for (let i = 0; i < 4; i++) {
-            e = document.getElementById((this.y[i] + this.off_y) + "," + (this.x[i] + this.off_x));
+            e = document.getElementById("screen").childNodes[this.y[i] + this.off_y].childNodes[this.x[i] + this.off_x]
             e.style.backgroundColor = this.color;
             board[this.y[i] + this.off_y][this.x[i] + this.off_x] = 1
         }
     }
     this.unShow = function () {
         for (let i = 0; i < 4; i++) {
-            e = document.getElementById((this.y[i] + this.off_y) + "," + (this.x[i] + this.off_x));
+            e = document.getElementById("screen").childNodes[this.y[i] + this.off_y].childNodes[this.x[i] + this.off_x]
             e.style.backgroundColor = "black";
             board[this.y[i] + this.off_y][this.x[i] + this.off_x] = 0
         }
@@ -208,7 +212,6 @@ function create() {
         row.classList.add("row")
         for (let x = 0; x < board[y].length; x++) {
             box = document.createElement("div");
-            box.setAttribute("id", y + "," + x);
             box.style.backgroundColor = "black";
             box.classList.add("box")
             row.appendChild(box);
@@ -216,4 +219,17 @@ function create() {
         screen.appendChild(row);
     }
     document.body.appendChild(screen)
+}
+function newRow() {
+    screen = document.getElementById("screen")
+    row = document.createElement("div");
+    row.classList.add("row")
+    for (let x = 0; x < board[0].length; x++) {
+        box = document.createElement("div");
+        box.style.backgroundColor = "black";
+        box.classList.add("box")
+        row.appendChild(box);
+    }
+    screen.prepend(row);
+
 }
