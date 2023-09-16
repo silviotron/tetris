@@ -1,14 +1,22 @@
+
+var next = Math.floor(Math.random() * 7);
+colors = ["cyan", "yellow", "purple", "green", "red", "blue", "orange"]
+forms = ["I", "O", "T", "S", "Z", "J", "L"]
 const h = 20;
 const w = 10;
+score = 0
 var board = new Array(h);
 for (let i = 0; i < board.length; i++) {
-    board[i] = new Array(w).fill(false)
+    board[i] = new Array(w).fill(0)
 
 }
 
 var Piece = function (form) {
     this.rotation = 0;
-    rand = Math.floor(Math.random() * 7);
+    rand = next;
+    next = Math.floor(Math.random() * 7);
+    document.getElementById("next").style.backgroundColor = colors[next]
+    document.getElementById("next").innerHTML = forms[next]
     switch (rand) {
         case 0:
             this.y = [1, 1, 1, 1];
@@ -64,21 +72,43 @@ var Piece = function (form) {
     }
     this.off_y = 0;
     this.off_x = 0;
+    this.chkLines = function () {
+        let unique = [...new Set(this.y)];
+        unique.sort()
+        for (let i = 0; i < unique.length; i++) {
+            line = true;
+            for (let e = 0; e < w; e++) {
+                if (board[unique[i] + this.off_y][e] != 2) {
+                    line = false;
+                }
+            }
+            console.log(line)
+            if (line) {
+                document.getElementById("screen").removeChild(document.getElementById("screen").childNodes[i + this.off_y])
+                score += 100;
+                document.getElementById("score").innerHTML = score
+
+            }
+
+        }
+
+    }
     this.show = function () {
         for (let i = 0; i < 4; i++) {
             e = document.getElementById((this.y[i] + this.off_y) + "," + (this.x[i] + this.off_x));
             e.style.backgroundColor = this.color;
-            board[this.y[i] + this.off_y][this.x[i] + this.off_x] = true
+            board[this.y[i] + this.off_y][this.x[i] + this.off_x] = 1
         }
     }
     this.unShow = function () {
         for (let i = 0; i < 4; i++) {
             e = document.getElementById((this.y[i] + this.off_y) + "," + (this.x[i] + this.off_x));
             e.style.backgroundColor = "black";
-            board[this.y[i] + this.off_y][this.x[i] + this.off_x] = false
+            board[this.y[i] + this.off_y][this.x[i] + this.off_x] = 0
         }
     }
     this.move = function (ny, nx) {
+
         res = false;
         this.unShow()
         if (this.canMove(ny, nx)) {
@@ -92,6 +122,11 @@ var Piece = function (form) {
     }
     this.end = function () {
         while (p.move(1, 0));
+        for (let i = 0; i < 4; i++) {
+            board[this.y[i] + this.off_y][this.x[i] + this.off_x] = 2
+
+        }
+        this.chkLines();
         p = new Piece()
     }
     this.rotate = function () {
@@ -102,9 +137,8 @@ var Piece = function (form) {
         for (let i = 0; i < 4; i++) {
             rotatedX[i] = Math.round(c * (this.x[i] - this.axis[1]) - s * (this.y[i] - this.axis[0]) + this.axis[1]);
             rotatedY[i] = Math.round(s * (this.x[i] - this.axis[1]) + c * (this.y[i] - this.axis[0]) + this.axis[0]);
-            console.log(i + ": ( " + rotatedX[i] + " , " + rotatedY[i] + " ) -> ( " + this.x[i] + " , " + this.y[i] + " )")
+            //console.log(i + ": ( " + rotatedX[i] + " , " + rotatedY[i] + " ) -> ( " + this.x[i] + " , " + this.y[i] + " )")
         }
-        console.log("")
         this.unShow()
         this.y = rotatedY
         this.x = rotatedX
@@ -114,7 +148,7 @@ var Piece = function (form) {
     }
     this.canMove = function (ny, nx) {
         for (let i = 0; i < 4; i++) {
-            if (this.x[i] + this.off_x + nx < 0 || this.y[i] + this.off_y + ny < 0 || this.x[i] + this.off_x + nx >= 10 || this.y[i] + this.off_y + ny >= 20 || board[this.y[i] + this.off_y + ny][this.x[i] + this.off_x + nx]) {
+            if (this.x[i] + this.off_x + nx < 0 || this.y[i] + this.off_y + ny < 0 || this.x[i] + this.off_x + nx >= 10 || this.y[i] + this.off_y + ny >= 20 || board[this.y[i] + this.off_y + ny][this.x[i] + this.off_x + nx] != 0) {
                 return false;
             }
         }
