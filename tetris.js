@@ -2,9 +2,10 @@
 var next = Math.floor(Math.random() * 7);
 colors = ["cyan", "yellow", "purple", "green", "red", "blue", "orange"]
 forms = ["I", "O", "T", "S", "Z", "J", "L"]
+let moveInterval = 1000; // milisegundos (2000 = 2 segundos)
 const h = 20;
 const w = 10;
-score = 0
+let score = 0
 var board = new Array(h);
 for (let i = 0; i < board.length; i++) {
     board[i] = new Array(w).fill(0)
@@ -84,8 +85,6 @@ var Piece = function (form) {
                 }
             }
             if (line) {
-                console.log(board)
-                console.log("deleted line: " + l)
                 document.getElementById("screen").removeChild(document.getElementById("screen").childNodes[l])
                 board.splice(l, 1)
                 board.unshift(new Array(w).fill(0))
@@ -115,7 +114,17 @@ var Piece = function (form) {
     this.move = function (ny, nx) {
         res = false;
         this.unShow()
-        if (this.canMove(ny, nx)) {
+        if (!this.canMove(ny, 0)) {
+            this.show()
+            for (let i = 0; i < 4; i++) {
+                board[this.y[i] + this.off_y][this.x[i] + this.off_x] = 2
+
+            }
+            this.chkLines();
+            p = new Piece()
+            return false
+        }
+        else if (this.canMove(ny, nx)) {
             this.off_y += ny;
             this.off_x += nx;
             res = true;
@@ -126,12 +135,6 @@ var Piece = function (form) {
     }
     this.end = function () {
         while (p.move(1, 0));
-        for (let i = 0; i < 4; i++) {
-            board[this.y[i] + this.off_y][this.x[i] + this.off_x] = 2
-
-        }
-        this.chkLines();
-        p = new Piece()
     }
     this.rotate = function () {
         rotatedY = new Array(4)
@@ -170,7 +173,7 @@ var Piece = function (form) {
 create()
 p = new Piece();
 p.show();
-
+setInterval(moveP, moveInterval);
 window.addEventListener("keydown", checkKeyPressed);
 
 function checkKeyPressed(evt) {
@@ -194,9 +197,6 @@ function checkKeyPressed(evt) {
         case " ":
             p.end()
             break;
-        case "Enter":
-            p = new Piece()
-            break;
 
         default:
             break;
@@ -204,10 +204,9 @@ function checkKeyPressed(evt) {
 }
 
 
-
-
-
-
+function moveP() {
+    p.move(1, 0)
+}
 function create() {
     screen = document.createElement("div");
     screen.setAttribute("id", "screen");
