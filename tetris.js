@@ -24,6 +24,7 @@ var Piece = function (form) {
             this.x = [3, 4, 5, 6];
             this.axis = [1.5, 4.5];
             this.color = "cyan"
+            this.hsl = { h: 180, s: 100, l: 50 }
             this.form = "I";
             break;
         case 1:
@@ -31,6 +32,7 @@ var Piece = function (form) {
             this.x = [4, 5, 4, 5];
             this.axis = [0.5, 4.5];
             this.color = "yellow"
+            this.hsl = { h: 60, s: 100, l: 50 }
             this.form = "O";
             break;
         case 2:
@@ -38,6 +40,7 @@ var Piece = function (form) {
             this.x = [4, 3, 4, 5];
             this.axis = [1, 4];
             this.color = "purple"
+            this.hsl = { h: 300, s: 100, l: 25 }
             this.form = "T";
             break;
         case 3:
@@ -45,6 +48,7 @@ var Piece = function (form) {
             this.x = [4, 5, 3, 4];
             this.axis = [1, 4];
             this.color = "green"
+            this.hsl = { h: 120, s: 100, l: 25 }
             this.form = "S";
             break;
         case 4:
@@ -52,6 +56,7 @@ var Piece = function (form) {
             this.x = [3, 4, 4, 5];
             this.axis = [1, 4];
             this.color = "red"
+            this.hsl = { h: 0, s: 100, l: 50 }
             this.form = "Z";
             break;
         case 5:
@@ -59,6 +64,7 @@ var Piece = function (form) {
             this.x = [3, 3, 4, 5];
             this.axis = [1, 4];
             this.color = "blue"
+            this.hsl = { h: 240, s: 100, l: 50 }
             this.form = "J";
             break;
         case 6:
@@ -66,6 +72,7 @@ var Piece = function (form) {
             this.x = [5, 3, 4, 5];
             this.axis = [1, 4];
             this.color = "orange"
+            this.hsl = { h: 39, s: 100, l: 50 }
             this.form = "L";
             break;
         default:
@@ -101,6 +108,7 @@ var Piece = function (form) {
         for (let i = 0; i < 4; i++) {
             e = document.getElementById("screen").childNodes[this.y[i] + this.off_y].childNodes[this.x[i] + this.off_x]
             e.style.backgroundColor = this.color;
+            e.style.borderColor = "hsl(" + this.hsl.h + ", " + this.hsl.s + "%, " + (this.hsl.l + 25) + "%)";
             board[this.y[i] + this.off_y][this.x[i] + this.off_x] = 1
         }
     }
@@ -108,6 +116,7 @@ var Piece = function (form) {
         for (let i = 0; i < 4; i++) {
             e = document.getElementById("screen").childNodes[this.y[i] + this.off_y].childNodes[this.x[i] + this.off_x]
             e.style.backgroundColor = "black";
+            e.style.borderColor = "white";
             board[this.y[i] + this.off_y][this.x[i] + this.off_x] = 0
         }
     }
